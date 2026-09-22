@@ -1,0 +1,477 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eaglercraft Clients</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/nN38pm72/logo.png">
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            top: 0;
+            left: 0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --item-bg: rgba(255, 255, 255, 0.1);
+            --item-hover: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: radial-gradient(circle at top right, #232440, #1a1b2d);
+            color: #fff;
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+            text-shadow: 0 0 25px rgba(243, 168, 71, 0.5);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: #f3a847;
+            box-shadow: 0 0 15px rgba(243, 168, 71, 0.2);
+        }
+
+        .category {
+            margin-bottom: 2rem;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .category.hidden {
+            display: none;
+        }
+
+        .category h2 {
+            color: #f3a847;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .category-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .item {
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .item:hover {
+            transform: translateY(-6px);
+            background: var(--item-hover);
+            border-color: #e48f34;
+            box-shadow: 
+                0 4px 25px rgba(0, 0, 0, 0.15),
+                0 0 20px rgba(243, 168, 71, 0.2);
+        }
+
+        .item a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            display: block;
+            padding: 1.2rem 1.7rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .item:hover a {
+            color: #f3a847;
+        }
+
+        .version {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            h1 {
+                font-size: 2.1rem;
+            }
+
+            .category-container {
+                category-container-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            display: none;
+        }
+        
+        .servers-btn {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        .servers-btn:hover {
+            background: var(--item-hover);
+            border-color: #e48f34;
+            box-shadow: 
+                0 4px 25px rgba(0, 0, 0, 0.15),
+                0 0 20px rgba(243, 168, 71, 0.2);
+        }
+        
+        #visitorCount {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+  
+    <div class="container">
+        <header>
+            <h1>Eaglercraft Client Launcher</h1>
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Search Eaglercraft Clients..." autocomplete="off">
+                <button class="servers-btn" id="serversBtn">Servers</button>
+            </div>
+        </header>
+
+        <div id="no-results" class="no-results">
+            No clients found
+        </div>
+        
+        <h2>Normal Clients</h2>
+        
+        <br>
+        
+        <div class="category">
+            <h2>Classic Clients</h2>
+            <div class="category-container">
+                <div class="item" prepend-url="LzNsaXQzLVBsNHkzci9lYWdsZXJjcmFmdC0yNi4yL3JlZnMvaGVhZHMvbWFpbi9pbmRleC5odG1s"><a>Eaglercraft 26.2</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZWFnbGVyMS4xMi5odG1s"><a>Eaglercraft 1.12</a></div>
+                <div class="item" prepend-url="L0FzdHJhQ2xpZW50T3JnL0FzdHJhQ2xpZW50T3JnLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vRWFnbGVyY3JhZnRYXzEuOF9PZmZsaW5lX0ludGVybmF0aW9uYWwuaHRtbA=="><a>Eaglercraft 1.8.8</a></div>
+            </div>
+        </div>
+          
+        <div class="category">
+            <h2>Other Clients</h2>
+            <div class="category-container">
+                <div class="item" prepend-url="L0VsaXRlNHIvUmVzZW50LUNsaWVudC9yZWZzL2hlYWRzL21haW4vaW5kZXguaHRtbA=="><a>Resent Client v5.1</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vYXN0cmFjbGllbnQuaHRtbA=="><a>Astra Client</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vMS4xMmNsaWVudC5odG1s"><a>Pixel Client 1.12</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vcGl4ZWwuaHRtbA=="><a>Pixel Client 1.8.8 v2.1.2</a></div>
+            </div>
+        </div>
+
+        <br>
+        
+        <h2>Hacked Clients</h2>
+        
+        <br>
+        
+        <div class="category">
+            <h2>DragonX Clients</h2>
+            <div class="category-container">
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZHJhZ29ueHY1Lmh0bWw="><a>DragonX v5.1</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZHJhZ29udjQuaHRtbA=="><a>DragonX v4</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vRHJhZ29uWCUyMFYzJTIwQ2xpZW50Lmh0bWw="><a>DragonX v3</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vRHJhZ29uWCUyME5ldyUyMENsaWNrJTIwR1VJLmh0bWw="><a>DragonX v2</a></div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2>UwU Clients</h2>
+            <div class="category-container">
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVLWNsaWVudC1iMi5odG1s"><a>UwU Client Beta v2</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVQ2xpZW50JTIwdjElMjBGdWxsLmh0bWw="><a>UwU Client v1</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVbGl0ZTIuaHRtbA=="><a>UwU Lite v2</a></div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2>Justin Clients</h2>
+            <div class="category-container">
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vanVzdGludjMuaHRtbA=="><a>Justin Client v3</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vanVzdGluY2xpZW50Lmh0bWw="><a>Justin Client v1.2.4</a></div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2>Shadow Clients</h2>
+            <div class="category-container">
+                <div class="item" prepend-url="L1BleXRvblBsYXl6NTk1L1NoYWRvdy00LjAvcmVmcy9oZWFkcy9tYWluL2phdmFzY3JpcHQvU2hhZG93X0NsaWVudF9JbnRlcm5hdGlvbmFsLmh0bWw="><a>Shadow Client v4</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vU2hhZG93X0NsaWVudF8yLjVfMS44LjhfSW50ZXJuYXRpb25hbC5odG1s"><a>Shadow Client v2.5</a></div>
+            </div>
+        </div>
+
+        <div class="category">
+            <h2>Other Clients</h2>
+            <div class="category-container">
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vd3Vyc3RYLmh0bWw="><a>WurstX Client Beta v1</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vbW9vbmxpZ2h0Lmh0bWw="><a>MoonLight Client</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vUGlDbGllbnQuaHRtbA=="><a>PiClient</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vbWV0ZW9yLmh0bWw="><a>Meteor Client</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZGVtb24uaHRtbA=="><a>Demon Client</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vS29uZWNsaWVudC0xLjguOC1vZmZsaW5lRG93bmxvYWQuaHRtbA=="><a>Koneclient</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZmxhbWVjbGllbnQlMjAzLjcuaHRtbA=="><a>FlameClient v3.7</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZGFuaWVsLmh0bWw="><a>Daniel Client v1</a></div>
+            </div>
+        </div>
+        <img id="visitorCount" src="https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Feaglerclients.pages.dev%2F&s=12&c=FFFFFF&bg=00000000&no=10&ff=electrolize&tb=&ta= Visits" alt="Visits">
+    </div>
+
+    <script>
+        const search = document.getElementById('search');
+        const categories = document.querySelectorAll('.category');
+        const items = document.querySelectorAll('.item');
+        const noResults = document.getElementById('no-results');
+
+        function filterClients(searchTerm) {
+            searchTerm = searchTerm.toLowerCase().trim();
+            let hasVisibleitems = false;
+
+            if (searchTerm === '') {
+                items.forEach(item => item.style.display = '');
+                categories.forEach(category => category.style.display = '');
+                noResults.style.display = 'none';
+                return;
+            }
+
+            items.forEach(item => {
+                const itemText = item.textContent.toLowerCase();
+                const isVisible = itemText.includes(searchTerm);
+                item.style.display = isVisible ? '' : 'none';
+                if (isVisible) hasVisibleitems = true;
+            });
+
+            categories.forEach(category => {
+                const hasVisibleitem = Array.from(category.querySelectorAll('.item'))
+                    .some(item => item.style.display !== 'none');
+                category.style.display = hasVisibleitem ? '' : 'none';
+            });
+
+            noResults.style.display = hasVisibleitems ? 'none' : 'block';
+        }
+
+        search.addEventListener('input', (e) => {
+            filterClients(e.target.value);
+        });
+        
+        document.getElementById('serversBtn').addEventListener('click', function() {
+            window.open('https://drive.google.com/file/d/1KfuY0JwuWCuiYyII9JYAQmov0YMRiY-g/view?usp=sharing', '_blank');
+        });
+        
+        const baseUrl = atob("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29t")
+        
+        document.querySelectorAll('.item a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const baseUrl = atob("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29t");
+                const clientName = this.closest('.item').getAttribute('client-name') || this.textContent.trim();
+                const ePrependUrl = this.closest('.item').getAttribute('prepend-url') || '';
+                const prependUrl = atob(ePrependUrl);
+                
+                let newBlankTab = window.open("about:blank", "_blank");
+                if (newBlankTab) {
+                    const htmlContent = `
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>${clientName}</title>
+                        </head>
+                        <body>
+                            <script>
+                                async function fetchAndRun() {
+                                    try {
+                                        const fullUrl = '${baseUrl}' + '${prependUrl}';
+                                        const response = await fetch(fullUrl);
+                                        if (!response.ok) {
+                                            alert("Failed to fetch URL.");
+                                            return;
+                                        }
+                                        const text = await response.text();
+                                        document.open();
+                                        document.write(text);
+                                        document.close();
+                                    } catch (error) {
+                                        console.error("Error fetching the code:", error);
+                                        alert("Error fetching the code. Check the console for details.");
+                                    }
+                                }
+                                
+                                fetchAndRun();
+                            <` + `/script>
+                        <` + `/body>
+                        <` + `/html>
+                    `;
+                    
+                    newBlankTab.document.write(htmlContent);
+                    newBlankTab.document.close();
+                    
+                    newBlankTab.document.title = clientName;
+                    
+                    function setTitle(newTitle) {
+                        newBlankTab.document.title = clientName;
+                    }
+            
+                    window.onload = function() {
+                        setTimeout(function() {
+                            setTitle;
+                        }, 10000);
+                    };
+                    
+                } else {
+                    alert("Allow pop-ups at the right of the search bar. Then reload the page.");
+                }
+            });
+        });
+
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 100,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#f3a847"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.25
+                    }
+                },
+                "size": {
+                    "value": 4,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 4,
+                        "size_min": 0.25
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#f3a847",
+                    "opacity": 0.4,
+                    "width": 1.5
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 4,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "window",
+                "events": {
+                    "onhover": {
+                        "enable": false,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</html>
