@@ -532,24 +532,12 @@
             margin: 21px 0;
         }
 
-        .settings-description {
-            margin-top: 9px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.75rem;
-            line-height: 1.5;
-        }
-
         .settings-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-top: 24px;
             gap: 10px;
-        }
-
-        .settings-footer span {
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.45);
         }
 
         #settings-done {
@@ -658,15 +646,9 @@
                     autocomplete="off"
                     maxlength="100"
                 >
-
-                <p class="settings-description">
-                    Leave empty to use the original client names.
-                    A custom title will override all page titles.
-                </p>
             </div>
 
             <div class="settings-footer">
-                <span>Changes are saved automatically</span>
                 <button id="settings-done">Done</button>
             </div>
 
@@ -944,17 +926,28 @@
         }
 
         async function updateFaviconPreviews() {
-            for (const preset of Object.keys(FAVICON_PRESETS)) {
+            const presets = Object.keys(FAVICON_PRESETS);
+
+            const previewResults = await Promise.all(
+                presets.map(async preset => {
+                    const url = await resolveFavicon(preset);
+
+                    return {
+                        preset: preset,
+                        url: url
+                    };
+                })
+            );
+
+            previewResults.forEach(result => {
                 const preview = document.getElementById(
-                    'preview-' + preset
+                    'preview-' + result.preset
                 );
 
-                if (!preview) continue;
-
-                const url = await resolveFavicon(preset);
-
-                preview.src = url || '';
-            }
+                if (preview) {
+                    preview.src = result.url || '';
+                }
+            });
 
             updateCustomPreview();
         }
@@ -1247,8 +1240,6 @@
                                 document.write(html);
                                 document.close();
 
-                                // Register this tab with the main launcher.
-                                // This applies the latest saved settings.
                                 if (
                                     window.opener &&
                                     !window.opener.closed &&
