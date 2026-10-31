@@ -907,38 +907,48 @@
         }
 
         function setFavicon(documentRef, faviconUrl) {
-            if (!documentRef || !faviconUrl) return;
+            if (!documentRef || !documentRef.head || !faviconUrl) return;
 
-            let favicon = documentRef.querySelector(
+            const faviconLinks = documentRef.querySelectorAll(
                 'link[rel~="icon"]'
             );
 
-            if (!favicon) {
-                favicon = documentRef.createElement('link');
+            if (faviconLinks.length === 0) {
+                const favicon = documentRef.createElement('link');
+
                 favicon.rel = 'icon';
                 favicon.type = 'image/png';
+                favicon.href = faviconUrl;
+
                 documentRef.head.appendChild(favicon);
+                return;
             }
 
-            if (favicon.href !== faviconUrl) {
-                favicon.href = faviconUrl;
-            }
+            faviconLinks.forEach(favicon => {
+                if (favicon.href !== faviconUrl) {
+                    favicon.href = faviconUrl;
+                }
+            });
         }
+
 
         function startFaviconRetries(tab, faviconUrl) {
             if (!tab || tab.closed || !faviconUrl) return;
 
             if (tab.__launcherFaviconRetryTimer) {
-                clearTimeout(tab.__launcherFaviconRetryTimer);
+                clearInterval(tab.__launcherFaviconRetryTimer);
+                tab.__launcherFaviconRetryTimer = null;
             }
 
-            let attempts = 0;
-            const maxAttempts = 20;
-            const retryInterval = 500;
+            const retryDuration = 120000;
+            const retryInterval = 1000;
+
+            const startTime = Date.now();
 
             function attemptSetFavicon() {
                 if (tab.closed) {
-                    clearTimeout(tab.__launcherFaviconRetryTimer);
+                    clearInterval(tab.__launcherFaviconRetryTimer);
+                    tab.__launcherFaviconRetryTimer = null;
                     return;
                 }
 
@@ -948,19 +958,20 @@
                     console.error('Favicon retry error:', error);
                 }
 
-                attempts++;
-
-                if (attempts < maxAttempts) {
-                    tab.__launcherFaviconRetryTimer = setTimeout(
-                        attemptSetFavicon,
-                        retryInterval
-                    );
-                } else {
+                if (Date.now() - startTime >= retryDuration) {
+                    clearInterval(tab.__launcherFaviconRetryTimer);
                     tab.__launcherFaviconRetryTimer = null;
                 }
             }
 
             attemptSetFavicon();
+
+            if (!tab.closed) {
+                tab.__launcherFaviconRetryTimer = setInterval(
+                    attemptSetFavicon,
+                    retryInterval
+                );
+            }
         }
 
         async function updateFaviconPreviews() {
@@ -1008,6 +1019,13 @@
 
             currentResolvedFavicon = faviconUrl;
 
+            const mainPageTitle = launcherSettings.customTitle.trim()
+                || 'Eaglercraft Clients';
+
+            if (document.title !== mainPageTitle) {
+                document.title = mainPageTitle;
+            }
+
             if (faviconUrl) {
                 setFavicon(document, faviconUrl);
             }
@@ -1016,7 +1034,7 @@
                 try {
                     if (tab.closed) {
                         if (tab.__launcherFaviconRetryTimer) {
-                            clearTimeout(tab.__launcherFaviconRetryTimer);
+                            clearInterval(tab.__launcherFaviconRetryTimer);
                         }
 
                         openedClientTabs.delete(tab);
@@ -1106,18 +1124,7 @@
         }
 
         let currentResolvedFavicon = '';
-
-        const originalApplyLauncherSettings = applyLauncherSettings;
-
-        applyLauncherSettings = async function() {
-            currentResolvedFavicon = await resolveFavicon(
-                launcherSettings.favicon,
-                launcherSettings.customFavicon
-            );
-
-            await originalApplyLauncherSettings();
-        };
-
+        
         function openSettings() {
 
             document.querySelectorAll('input[name="favicon"]').forEach(input => {
