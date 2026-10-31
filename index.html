@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,8 +81,8 @@
 
         .category {
             margin-bottom: 2rem;
-            opacity: 1;
-            transition: opacity 0.3s ease;
+            opacity: 0.92;
+            transition: opacity 0.25s ease;
         }
 
         .category.hidden {
@@ -93,9 +90,9 @@
         }
 
         .category h2 {
-            color: #f3a847;
+            color: rgba(243,168,71,0.9);
             margin-bottom: 1rem;
-            font-size: 1.3rem;
+            font-size: 1.05rem;
             font-weight: 600;
         }
 
@@ -154,10 +151,6 @@
             h1 {
                 font-size: 2.1rem;
             }
-
-            .category-container {
-                category-container-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
         }
 
         .no-results {
@@ -166,64 +159,207 @@
             color: rgba(255, 255, 255, 0.7);
             display: none;
         }
-        
-        .servers-btn {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            color: #fff;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
-            font-weight: 600;
+
+        .wisp-links {
+            margin: 1rem 0 2rem;
+            opacity: 0.95;
+            transition: opacity 0.25s ease;
         }
 
-        .servers-btn:hover {
+        .wisp-link {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--item-bg);
+            color: #fff;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+            font-size: 0.82rem;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .wisp-link:hover {
             background: var(--item-hover);
             border-color: #e48f34;
-            box-shadow: 
-                0 4px 25px rgba(0, 0, 0, 0.15),
-                0 0 20px rgba(243, 168, 71, 0.2);
-        }
-        
-        #visitorCount {
-          display: block;
-          margin-left: auto;
-          margin-right: auto;
+            box-shadow: 0 0 20px rgba(243, 168, 71, 0.2);
+            color: #f3a847;
+            transform: translateY(-3px);
         }
 
-	.wisp-links {
-	    margin: 1rem 0 2rem;
-	}
+        .recommended-category {
+            margin-bottom: 3rem;
+        }
 
-	.wisp-links .category-container {
-	    margin-top: 1rem;
-	}
+        .recommended-category h2 {
+            font-size: 1.5rem;
+            color: #f3a847;
+            margin-bottom: 1.2rem;
+        }
 
-	.wisp-link {
-	    cursor: pointer;
-	    border-radius: 10px;
-	    transition: all 0.3s ease;
-	    backdrop-filter: blur(8px);
-	    border: 1px solid rgba(255, 255, 255, 0.1);
-	    background: var(--item-bg);
-	    color: #fff;
-	    font-size: 1rem;
-	    font-weight: 600;
-	    padding: 1.2rem 1.7rem;
-	    overflow-wrap: anywhere;
-	}
-	
-	.wisp-link:hover {
-	    transform: translateY(-6px);
-	    background: var(--item-hover);
-	    border-color: #e48f34;
-	    box-shadow: 0 0 20px rgba(243, 168, 71, 0.2);
-	    color: #f3a847;
-	}
+        .recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 1rem;
+        }
 
+        .recommended-item {
+            border-radius: 14px;
+            min-height: 235px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.075), rgba(255,255,255,0.025));
+            border: 1px solid rgba(255,255,255,0.16);
+        }
+
+        .recommended-item a {
+            padding: 1.4rem;
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .recommended-item:hover {
+            transform: translateY(-7px);
+            border-color: #f3a847;
+            box-shadow: 0 0 25px rgba(243, 168, 71, 0.25);
+        }
+
+        .primary-recommendation {
+            background: linear-gradient(135deg, rgba(243,168,71,0.25), rgba(255,255,255,0.06));
+            border: 1px solid rgba(243,168,71,0.85);
+            box-shadow: 0 0 24px rgba(243,168,71,0.13);
+            min-height: 205px;
+        }
+
+        .recommendation-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #1a1b2d;
+            background: #f3a847;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 14px;
+        }
+
+        .secondary-recommendation .recommendation-badge {
+            background: rgba(243, 168, 71, 0.2);
+            color: #f3a847;
+            border: 1px solid rgba(243, 168, 71, 0.5);
+        }
+
+        .recommended-name {
+            font-size: 1.35rem;
+            font-weight: 750;
+            margin-bottom: 4px;
+        }
+
+        .recommendation-description {
+            font-size: 0.85rem;
+            opacity: 0.75;
+            margin-top: 10px;
+            font-weight: 400;
+        }
+
+        .launch-label {
+            margin-top: auto;
+            padding-top: 15px;
+            color: #f3a847;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .recommended-item:hover .launch-label {
+            letter-spacing: 0.5px;
+        }
+
+        .primary-recommendation a {
+            min-height: 205px;
+            padding: 1.15rem;
+        }
+
+        .primary-recommendation .recommendation-badge {
+            font-size: 0.62rem;
+            padding: 4px 8px;
+            margin-bottom: 9px;
+        }
+
+        .primary-recommendation .recommended-name {
+            font-size: 1.12rem;
+        }
+
+        .primary-recommendation .recommendation-description {
+            font-size: 0.78rem;
+            margin-top: 7px;
+        }
+
+        .primary-recommendation .launch-label {
+            font-size: 0.8rem;
+            padding-top: 10px;
+        }
+
+        .category:hover {
+            opacity: 1;
+        }
+
+        .category .item {
+            background: rgba(255,255,255,0.045);
+            border-color: rgba(255,255,255,0.12);
+        }
+
+        .category .item a {
+            color: rgba(255,255,255,0.92);
+            font-size: 0.94rem;
+        }
+
+        .category .item:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.09);
+        }
+
+        .mc-version {
+            display: inline-block;
+            margin-left: 9px;
+            padding: 2px 7px;
+            border-radius: 5px;
+            background: rgba(243,168,71,0.12);
+            border: 1px solid rgba(243,168,71,0.28);
+            color: rgba(243,168,71,0.9);
+            font-size: 0.72rem;
+            font-weight: 700;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .wisp-links h2 {
+            font-size: 1.05rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .wisp-links .category-container {
+            margin-top: 0.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.8rem;
+        }
+
+        @media (max-width: 650px) {
+            .recommended-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .recommended-item,
+            .recommended-item a {
+                min-height: 210px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -234,303 +370,257 @@
             <h1>Eaglercraft Client Launcher</h1>
             <div class="search-container">
                 <input type="text" id="search" placeholder="Search Eaglercraft Clients..." autocomplete="off">
-                <button class="servers-btn" id="serversBtn">Servers</button>
+                
             </div>
         </header>
+
+        <div class="category-container recommended-grid">
+
+            <div class="item recommended-item primary-recommendation"
+                  client-name="Eagler Client 26.2 (Wisp)"
+                  prepend-url="L25kaXJtbjMvV2lzcGNyYWZ0LUVhZ2xlcmNyYWZ0LTI2LjIvcmVmcy9oZWFkcy9tYWluL2luZGV4Lmh0bWw=">
+
+                <a href="#">
+                    <span class="recommendation-badge">TOP RECOMMENDATION</span>
+                    <span class="recommended-name">Eagler Client 26.2 (Wisp)</span>
+                    <span class="version">Modded client · Version 26.2</span>
+                    <span class="recommendation-description">
+                        With Wispcraft integration, letting client join normal Java servers
+                    </span>
+                    <span class="launch-label">Launch Client →</span>
+                </a>
+            </div>
+
+            <div class="item recommended-item secondary-recommendation"
+                  client-name="Eaglercraft 26.2"
+                  prepend-url="LzNsaXQzLVBsNHkzci9lYWdsZXJjcmFmdC0yNi4yL3JlZnMvaGVhZHMvbWFpbi9pbmRleC5odG1s">
+
+                <a href="#">
+                    <span class="recommendation-badge">RECOMMENDED</span>
+                    <span class="recommended-name">Eaglercraft 26.2</span>
+                    <span class="version">Vanilla client · Version 26.2</span>
+                    <span class="recommendation-description">
+                        A vanilla Eaglercraft experience
+                    </span>
+                    <span class="launch-label">Launch Client →</span>
+                </a>
+            </div>
+
+        </div>
+        
+        <br>
+
+<div class="wisp-links" id="wisp-servers">
+		    <h2>Wisp Servers</h2>
+		    <div class="category-container">
+		        <div class="wisp-link" data-wisp="wss://anura.pro/">wss://anura.pro/</div>
+            <div class="wisp-link" data-wisp="wss://wisp.mercurywork.shop/">wss://wisp.mercurywork.shop/</div>
+		        <div class="wisp-link" data-wisp="wss://gointospace.app/wisp/">wss://gointospace.app/wisp/</div>
+            </div>
+        </div>
 
         <div id="no-results" class="no-results">
             No clients found
         </div>
         
-        <h2>Normal Clients</h2>
+        <h2 id="normal-heading">Normal Clients</h2>
         
         <br>
         
         <div class="category">
-            <h2>Classic Clients</h2>
+            <h2>Vanilla Clients</h2>
             <div class="category-container">
-                <div class="item" prepend-url="LzNsaXQzLVBsNHkzci9lYWdsZXJjcmFmdC0yNi4yL3JlZnMvaGVhZHMvbWFpbi9pbmRleC5odG1s"><a>Eaglercraft 26.2</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZWFnbGVyMS4xMi5odG1s"><a>Eaglercraft 1.12</a></div>
-                <div class="item" prepend-url="L0FzdHJhQ2xpZW50T3JnL0FzdHJhQ2xpZW50T3JnLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vRWFnbGVyY3JhZnRYXzEuOF9PZmZsaW5lX0ludGVybmF0aW9uYWwuaHRtbA=="><a>Eaglercraft 1.8.8</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZWFnbGVyMS4xMi5odG1s"><a>Eaglercraft<span class="mc-version">1.12</span></a></div>
+                <div class="item" prepend-url="L3Bvb2xvb3BvL0VhZ2xlcmNyYWZ0MS44LjgtU2luZ2xlcGxheWVyLU11bHRpcGxheWVyLS9yZWZzL2hlYWRzL21haW4vRWFnbGVyY3JhZnRYXzFfOF91MzlfT2ZmbGluZV9TaWduZWQuaHRtbA=="><a>Eaglercraft<span class="mc-version">1.8.8</span></a></div>
             </div>
         </div>
           
         <div class="category">
-            <h2>Other Clients</h2>
+            <h2>Modded Clients</h2>
             <div class="category-container">
-                <div class="item" prepend-url="L25kaXJtbjMvV2lzcGNyYWZ0LUVhZ2xlcmNyYWZ0LTI2LjIvcmVmcy9oZWFkcy9tYWluL2luZGV4Lmh0bWw="><a>Eagler Client Wisp 26.2</a></div>
-                <div class="item" prepend-url="L0VsaXRlNHIvUmVzZW50LUNsaWVudC9yZWZzL2hlYWRzL21haW4vaW5kZXguaHRtbA=="><a>Resent Client v5.1</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vYXN0cmFjbGllbnQuaHRtbA=="><a>Astra Client</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vMS4xMmNsaWVudC5odG1s"><a>Pixel Client 1.12</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vcGl4ZWwuaHRtbA=="><a>Pixel Client 1.8.8 v2.1.2</a></div>
+                <div class="item" prepend-url="L0VsaXRlNHIvUmVzZW50LUNsaWVudC9yZWZzL2hlYWRzL21haW4vaW5kZXguaHRtbA=="><a>Resent Client v5.1<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vYXN0cmFjbGllbnQuaHRtbA=="><a>Astra Client<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L0ZsYW1lUFZQQ29kZXMvRmxhbWVDbGllbnQtMy44L3JlZnMvaGVhZHMvbWFpbi9GbGFtZUNsaWVudDMuOC5odG1s"><a>FlameClient v3.8<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZmxhbWVjbGllbnQlMjAzLjcuaHRtbA=="><a>FlameClient v3.7<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vcGl4ZWwuaHRtbA=="><a>Pixel Client v2.1.2<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L1BleXRvblBsYXl6NTk1L1NoYWRvdy00LjAvcmVmcy9oZWFkcy9tYWluL2phdmFzY3JpcHQvU2hhZG93X0NsaWVudF9JbnRlcm5hdGlvbmFsLmh0bWw="><a>Shadow Client v4<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vU2hhZG93X0NsaWVudF8yLjVfMS44LjhfSW50ZXJuYXRpb25hbC5odG1s"><a>Shadow Client v2.5<span class="mc-version">1.8.8</span></a></div>
             </div>
         </div>
 
         <br>
-		<div class="wisp-links">
-		    <h2>Wisp Links:</h2>
-		    <div class="category-container">
-		        <div class="wisp-link" data-wisp="wss://anura.pro/">wss://anura.pro/</div>
-		        <div class="wisp-link" data-wisp="wss://gointospace.app/wisp/">wss://gointospace.app/wisp/</div>
-        		<div class="wisp-link" data-wisp="wss://wisp.mercurywork.shop/">wss://wisp.mercurywork.shop/</div>
-   		 </div>
-		</div>
-        
-        <h2>Hacked Clients</h2>
+        <h2 id="hacked-heading">Hacked Clients</h2>
         
         <br>
         
         <div class="category">
-            <h2>DragonX Clients</h2>
+            <h2>DragonX</h2>
             <div class="category-container">
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZHJhZ29ueHY1Lmh0bWw="><a>DragonX v5.1</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZHJhZ29udjQuaHRtbA=="><a>DragonX v4</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vRHJhZ29uWCUyMFYzJTIwQ2xpZW50Lmh0bWw="><a>DragonX v3</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vRHJhZ29uWCUyME5ldyUyMENsaWNrJTIwR1VJLmh0bWw="><a>DragonX v2</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZHJhZ29ueHY1Lmh0bWw="><a>DragonX v5.1<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZHJhZ29udjQuaHRtbA=="><a>DragonX v4<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vRHJhZ29uWCUyMFYzJTIwQ2xpZW50Lmh0bWw="><a>DragonX v2<span class="mc-version">1.8.8</span></a></div>
             </div>
         </div>
 
         <div class="category">
-            <h2>UwU Clients</h2>
+            <h2>UwU</h2>
             <div class="category-container">
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVLWNsaWVudC1iMi5odG1s"><a>UwU Client Beta v2</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVQ2xpZW50JTIwdjElMjBGdWxsLmh0bWw="><a>UwU Client v1</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVbGl0ZTIuaHRtbA=="><a>UwU Lite v2</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVbGl0ZTIuaHRtbA=="><a>UwU Lite v2<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVLWNsaWVudC1iMi5odG1s"><a>UwU Client Beta v2<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vVXdVQ2xpZW50JTIwdjElMjBGdWxsLmh0bWw="><a>UwU Client v1<span class="mc-version">1.8.8</span></a></div>
             </div>
         </div>
 
         <div class="category">
-            <h2>Justin Clients</h2>
+            <h2>Justin</h2>
             <div class="category-container">
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vanVzdGludjMuaHRtbA=="><a>Justin Client v3</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vanVzdGluY2xpZW50Lmh0bWw="><a>Justin Client v1.2.4</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vanVzdGludjMuaHRtbA=="><a>Justin Client v3<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vanVzdGluY2xpZW50Lmh0bWw="><a>Justin Client v1.2.4<span class="mc-version">1.8.8</span></a></div>
             </div>
         </div>
 
         <div class="category">
-            <h2>Shadow Clients</h2>
+            <h2>Other</h2>
             <div class="category-container">
-                <div class="item" prepend-url="L1BleXRvblBsYXl6NTk1L1NoYWRvdy00LjAvcmVmcy9oZWFkcy9tYWluL2phdmFzY3JpcHQvU2hhZG93X0NsaWVudF9JbnRlcm5hdGlvbmFsLmh0bWw="><a>Shadow Client v4</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vU2hhZG93X0NsaWVudF8yLjVfMS44LjhfSW50ZXJuYXRpb25hbC5odG1s"><a>Shadow Client v2.5</a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vd3Vyc3RYLmh0bWw="><a>WurstX Client Beta v1<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vbW9vbmxpZ2h0Lmh0bWw="><a>MoonLight Client<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vUGlDbGllbnQuaHRtbA=="><a>PiClient v1<span class="mc-version">1.8.8</span></a></div>
+                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vbWV0ZW9yLmh0bWw="><a>MeteorX Beta v1.2<span class="mc-version">1.8.8</span></a></div>
             </div>
         </div>
-
-        <div class="category">
-            <h2>Other Clients</h2>
-            <div class="category-container">
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vd3Vyc3RYLmh0bWw="><a>WurstX Client Beta v1</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vbW9vbmxpZ2h0Lmh0bWw="><a>MoonLight Client</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vUGlDbGllbnQuaHRtbA=="><a>PiClient</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vbWV0ZW9yLmh0bWw="><a>Meteor Client</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZGVtb24uaHRtbA=="><a>Demon Client</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vS29uZWNsaWVudC0xLjguOC1vZmZsaW5lRG93bmxvYWQuaHRtbA=="><a>Koneclient</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZmxhbWVjbGllbnQlMjAzLjcuaHRtbA=="><a>FlameClient v3.7</a></div>
-                <div class="item" prepend-url="L2VhZ2xlcmhhY2tzL2VhZ2xlcmhhY2tzLmdpdGh1Yi5pby9yZWZzL2hlYWRzL21haW4vZGFuaWVsLmh0bWw="><a>Daniel Client v1</a></div>
-            </div>
-        </div>
-        <img id="visitorCount" src="https://visit-counter.vercel.app/counter.png?page=https%3A%2F%2Feaglercraftclients.pages.dev%2F&s=12&c=FFFFFF&bg=00000000&no=10&ff=electrolize&tb=&ta= Visits" alt="Visits">
     </div>
 
     <script>
         const search = document.getElementById('search');
         const categories = document.querySelectorAll('.category');
         const items = document.querySelectorAll('.item');
+        const recommendedGrid = document.querySelector('.recommended-grid');
+        const wispServers = document.getElementById('wisp-servers');
+        const normalHeading = document.getElementById('normal-heading');
+        const hackedHeading = document.getElementById('hacked-heading');
         const noResults = document.getElementById('no-results');
 
         function filterClients(searchTerm) {
             searchTerm = searchTerm.toLowerCase().trim();
-            let hasVisibleitems = false;
-
-            if (searchTerm === '') {
-                items.forEach(item => item.style.display = '');
-                categories.forEach(category => category.style.display = '');
-                noResults.style.display = 'none';
-                return;
-            }
+            let hasVisibleItems = false;
+            let hasVisibleRecommendations = false;
 
             items.forEach(item => {
-                const itemText = item.textContent.toLowerCase();
-                const isVisible = itemText.includes(searchTerm);
+                const isVisible = item.textContent.toLowerCase().includes(searchTerm);
                 item.style.display = isVisible ? '' : 'none';
-                if (isVisible) hasVisibleitems = true;
+                if (isVisible) hasVisibleItems = true;
+                if (isVisible && item.classList.contains('recommended-item')) {
+                    hasVisibleRecommendations = true;
+                }
             });
 
             categories.forEach(category => {
-                const hasVisibleitem = Array.from(category.querySelectorAll('.item'))
+                const hasVisibleItem = Array.from(category.querySelectorAll('.item'))
                     .some(item => item.style.display !== 'none');
-                category.style.display = hasVisibleitem ? '' : 'none';
+                category.style.display = hasVisibleItem ? '' : 'none';
             });
 
-            noResults.style.display = hasVisibleitems ? 'none' : 'block';
+            const normalCategories = Array.from(categories).slice(0, 2);
+            const hackedCategories = Array.from(categories).slice(2);
+
+            normalHeading.style.display = normalCategories.some(category => category.style.display !== 'none') ? '' : 'none';
+            hackedHeading.style.display = hackedCategories.some(category => category.style.display !== 'none') ? '' : 'none';
+
+            recommendedGrid.style.display = hasVisibleRecommendations ? 'grid' : 'none';
+            wispServers.style.display = searchTerm === '' ? '' : 'none';
+            noResults.style.display = hasVisibleItems ? 'none' : 'block';
         }
 
-        search.addEventListener('input', (e) => {
-            filterClients(e.target.value);
-        });
-        
-        document.getElementById('serversBtn').addEventListener('click', function() {
-            window.open('https://drive.google.com/file/d/1KfuY0JwuWCuiYyII9JYAQmov0YMRiY-g/view?usp=sharing', '_blank');
-        });
-        
-        const baseUrl = atob("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29t")
-        
+        search.addEventListener('input', event => filterClients(event.target.value));
+        filterClients('');
+
+        const baseUrl = atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29t');
+
         document.querySelectorAll('.item a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const baseUrl = atob("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29t");
-                const clientName = this.closest('.item').getAttribute('client-name') || this.textContent.trim();
-                const ePrependUrl = this.closest('.item').getAttribute('prepend-url') || '';
-                const prependUrl = atob(ePrependUrl);
-                
-                let newBlankTab = window.open("about:blank", "_blank");
-                if (newBlankTab) {
-                    const htmlContent = `
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            <title>${clientName}</title>
-                        </head>
-                        <body>
-                            <script>
-                                async function fetchAndRun() {
-                                    try {
-                                        const fullUrl = '${baseUrl}' + '${prependUrl}';
-                                        const response = await fetch(fullUrl);
-                                        if (!response.ok) {
-                                            alert("Failed to fetch URL.");
-                                            return;
-                                        }
-                                        const text = await response.text();
-                                        document.open();
-                                        document.write(text);
-                                        document.close();
-                                    } catch (error) {
-                                        console.error("Error fetching the code:", error);
-                                        alert("Error fetching the code. Check the console for details.");
-                                    }
-                                }
-                                
-                                fetchAndRun();
-                            <` + `/script>
-                        <` + `/body>
-                        <` + `/html>
-                    `;
-                    
-                    newBlankTab.document.write(htmlContent);
-                    newBlankTab.document.close();
-                    
-                    newBlankTab.document.title = clientName;
-                    
-                    function setTitle(newTitle) {
-                        newBlankTab.document.title = clientName;
-                    }
-            
-                    window.onload = function() {
-                        setTimeout(function() {
-                            setTitle;
-                        }, 10000);
-                    };
-                    
-                } else {
-                    alert("Allow pop-ups at the right of the search bar. Then reload the page.");
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                const item = this.closest('.item');
+                const clientName = item.getAttribute('client-name') || this.textContent.trim();
+                const prependUrl = atob(item.getAttribute('prepend-url') || '');
+                const safeClientName = JSON.stringify(clientName);
+                const safeFullUrl = JSON.stringify(baseUrl + prependUrl);
+                const newBlankTab = window.open('about:blank', '_blank');
+
+                if (!newBlankTab) {
+                    alert('Allow pop-ups at the right of the search bar. Then reload the page.');
+                    return;
+                }
+
+                const htmlContent = `
+                <!DOCTYPE html>
+                <html lang="en">
+                  <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>${clientName.replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]))}</title>
+                  </head>
+                  <body>
+                    <script>
+                      const clientName = ${safeClientName};
+                      const fullUrl = ${safeFullUrl};
+                      async function fetchAndRun() {
+                          try {
+                              const response = await fetch(fullUrl);
+                              if (!response.ok) {
+                                  alert('Failed to fetch URL.');
+                                  return;
+                              }
+                              const html = await response.text();
+                              document.open();
+                              document.write(html);
+                              document.close();
+                              document.title = clientName;
+                          } catch (error) {
+                              console.error('Error fetching the code:', error);
+                              alert('Error fetching the code. Check your internet connection.');
+                          }
+                      }
+                      fetchAndRun();
+                    <` + `/script>
+                  </body>
+                </html>`;
+
+                newBlankTab.document.open();
+                newBlankTab.document.write(htmlContent);
+                newBlankTab.document.close();
+            });
+        });
+
+        document.querySelectorAll('.wisp-link').forEach(link => {
+            link.addEventListener('click', async () => {
+                const text = link.dataset.wisp;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    const originalText = link.textContent;
+                    link.textContent = 'Copied to clipboard!';
+                    setTimeout(() => link.textContent = originalText, 1200);
+                } catch (error) {
+                    prompt('Copy this Wisp Server:', text);
                 }
             });
         });
 
-	document.querySelectorAll('.wisp-link').forEach(link => {
-	    link.addEventListener('click', async () => {
-	        const text = link.dataset.wisp;
-	
-	        try {
-	            await navigator.clipboard.writeText(text);
-	            const originalText = link.textContent;
-	            link.textContent = 'Copied to clipboard!';
-	
-        	    setTimeout(() => {
-        	        link.textContent = originalText;
-        	    }, 1200);
-        	} catch (error) {
-      	      prompt('Copy this Wisp link:', text);
-     	   }
-   	 });
-	});
-
         particlesJS('particles-js', {
-            "particles": {
-                "number": {
-                    "value": 100,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
-                    }
-                },
-                "color": {
-                    "value": "#f3a847"
-                },
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    }
-                },
-                "opacity": {
-                    "value": 0.5,
-                    "random": false,
-                    "anim": {
-                        "enable": true,
-                        "speed": 1,
-                        "opacity_min": 0.25
-                    }
-                },
-                "size": {
-                    "value": 4,
-                    "random": true,
-                    "anim": {
-                        "enable": true,
-                        "speed": 4,
-                        "size_min": 0.25
-                    }
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#f3a847",
-                    "opacity": 0.4,
-                    "width": 1.5
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 4,
-                    "direction": "none",
-                    "random": false,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false,
-                    "attract": {
-                        "enable": false,
-                        "rotateX": 600,
-                        "rotateY": 1200
-                    }
-                }
+            particles: {
+                number: { value: 100, density: { enable: true, value_area: 800 } },
+                color: { value: '#f3a847' },
+                shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
+                opacity: { value: 0.5, random: false, anim: { enable: true, speed: 1, opacity_min: 0.25 } },
+                size: { value: 4, random: true, anim: { enable: true, speed: 4, size_min: 0.25 } },
+                line_linked: { enable: true, distance: 150, color: '#f3a847', opacity: 0.4, width: 1.5 },
+                move: { enable: true, speed: 4, direction: 'none', random: false, straight: false, out_mode: 'out', bounce: false, attract: { enable: false, rotateX: 600, rotateY: 1200 } }
             },
-            "interactivity": {
-                "detect_on": "window",
-                "events": {
-                    "onhover": {
-                        "enable": false,
-                        "mode": "repulse"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
-                    }
-                }
+            interactivity: {
+                detect_on: 'window',
+                events: { onhover: { enable: false, mode: 'repulse' }, onclick: { enable: true, mode: 'push' } }
             },
-            "retina_detect": true
+            retina_detect: true
         });
     </script>
 </html>
