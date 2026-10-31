@@ -940,7 +940,7 @@
                 tab.__launcherFaviconRetryTimer = null;
             }
 
-            const retryDuration = 120000;
+            const retryDuration = 45000;
             const retryInterval = 1000;
 
             const startTime = Date.now();
@@ -1108,14 +1108,6 @@
                     attributeFilter: ['href']
                 });
 
-                if (tab.document.head) {
-                    observer.observe(tab.document.head, {
-                        subtree: true,
-                        childList: true,
-                        characterData: true
-                    });
-                }
-
                 tab.__launcherSettingsObserver = observer;
 
             } catch (error) {
@@ -1226,32 +1218,6 @@
 
         updateFaviconPreviews();
         applyLauncherSettings();
-
-        async function resolveFavicon(mode, customUrl = '') {
-            if (mode === 'custom') {
-                return customUrl.trim() ||
-                    await resolveFavicon('main');
-            }
-
-            const sourceUrl = FAVICON_PRESETS[mode];
-
-            if (!sourceUrl || sourceUrl.startsWith('PASTE_')) {
-                return '';
-            }
-
-            try {
-                const response = await fetch(sourceUrl);
-
-                if (!response.ok) {
-                    throw new Error('Favicon file could not be loaded');
-                }
-
-                return (await response.text()).trim();
-            } catch (error) {
-                console.error('Favicon loading error:', error);
-                return '';
-            }
-        }
 
         window.getCurrentLauncherFavicon = async function() {
             return await resolveFavicon(
