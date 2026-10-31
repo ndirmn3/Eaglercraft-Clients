@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eaglercraft Clients</title>
-    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/main.png" />
+    <link id="main-favicon" rel="icon" type="image/x-icon"
+    href="https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/main.png" />
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
         
@@ -360,10 +361,317 @@
                 font-size: 1.8rem;
             }
         }
+
+        #settings-button {
+            position: fixed;
+            top: 18px;
+            right: 20px;
+            width: 43px;
+            height: 43px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        #settings-button:hover {
+            background: rgba(243,168,71,0.2);
+            border-color: #f3a847;
+            color: #f3a847;
+            transform: rotate(30deg);
+        }
+
+        #settings-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 15px;
+        }
+
+        #settings-overlay.active {
+            display: flex;
+        }
+
+        #settings-popup {
+            width: 100%;
+            max-width: 390px;
+            max-height: 90vh;
+            overflow-y: auto;
+
+            padding: 23px;
+
+            background: #202136;
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 15px;
+
+            box-shadow: 0 15px 60px rgba(0,0,0,0.45);
+
+            animation: settingsAppear 0.2s ease;
+        }
+
+        @keyframes settingsAppear {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .settings-header h2 {
+            font-size: 1.35rem;
+            color: white;
+        }
+
+        #settings-close {
+            border: none;
+            background: transparent;
+            color: rgba(255,255,255,0.65);
+            font-size: 27px;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        #settings-close:hover {
+            color: #f3a847;
+        }
+
+        .settings-section h3 {
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            color: #f3a847;
+        }
+
+        #favicon-options {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .favicon-option {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 9px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .favicon-option:hover {
+            background: rgba(255,255,255,0.07);
+        }
+
+        .favicon-option input {
+            accent-color: #f3a847;
+            cursor: pointer;
+        }
+
+        .favicon-preview {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        #custom-favicon-url,
+        #custom-page-title {
+            width: 100%;
+            margin-top: 10px;
+            padding: 11px 12px;
+
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.13);
+            border-radius: 8px;
+
+            color: white;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        #custom-favicon-url:focus,
+        #custom-page-title:focus {
+            border-color: #f3a847;
+            box-shadow: 0 0 10px rgba(243,168,71,0.12);
+        }
+
+        #custom-favicon-url::placeholder,
+        #custom-page-title::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .settings-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 21px 0;
+        }
+
+        .settings-description {
+            margin-top: 9px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .settings-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 24px;
+            gap: 10px;
+        }
+
+        .settings-footer span {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.45);
+        }
+
+        #settings-done {
+            background: #f3a847;
+            border: none;
+            border-radius: 7px;
+            padding: 9px 20px;
+            color: #1a1b2d;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #settings-done:hover {
+            background: #ffbd65;
+        }
+
+        @media (max-width: 500px) {
+            #settings-button {
+                top: 12px;
+                right: 12px;
+            }
+
+            #settings-popup {
+                padding: 19px;
+            }
+        }
+
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
+
+    <button id="settings-button" title="Settings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="21" height="21"
+             fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1 1.55V20h-2.4v-.21a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.5 15a1.7 1.7 0 0 0-1.55-1H6v-2.4h.95a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.88L8.1 8.66l1.7-1.7.06.06a1.7 1.7 0 0 0 1.88.34 1.7 1.7 0 0 0 1-1.55V5.6h2.4v.21a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06a1.7 1.7 0 0 0-.34 1.88 1.7 1.7 0 0 0 1.55 1H21v2.4h-.21a1.7 1.7 0 0 0-1.39 1z"
+                  transform="translate(-1.5 -1) scale(1.1)"></path>
+        </svg>
+    </button>
+
+    <div id="settings-overlay">
+        <div id="settings-popup">
+
+            <div class="settings-header">
+                <h2>Settings</h2>
+                <button id="settings-close" aria-label="Close">&times;</button>
+            </div>
+
+            <div class="settings-section">
+                <h3>Favicon</h3>
+
+                <div id="favicon-options">
+
+                    <label class="favicon-option">
+                        <input type="radio" name="favicon" value="main" checked>
+                        <img class="favicon-preview" id="preview-main" src="" alt="">
+                        <span>Main (Default)</span>
+                    </label>
+
+                    <label class="favicon-option">
+                        <input type="radio" name="favicon" value="google">
+                        <img class="favicon-preview" id="preview-google" src="" alt="">
+                        <span>Google</span>
+                    </label>
+
+                    <label class="favicon-option">
+                        <input type="radio" name="favicon" value="classroom">
+                        <img class="favicon-preview" id="preview-classroom" src="" alt="">
+                        <span>Google Classroom</span>
+                    </label>
+
+                    <label class="favicon-option">
+                        <input type="radio" name="favicon" value="drive">
+                        <img class="favicon-preview" id="preview-drive" src="" alt="">
+                        <span>Google Drive</span>
+                    </label>
+
+                    <label class="favicon-option">
+                        <input type="radio" name="favicon" value="custom">
+                        <img class="favicon-preview" id="preview-custom" src="" alt="">
+                        <span>Custom Image</span>
+                    </label>
+
+                </div>
+
+                <input
+                    type="url"
+                    id="custom-favicon-url"
+                    placeholder="Enter image URL..."
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="settings-divider"></div>
+
+            <div class="settings-section">
+                <h3>Page Title</h3>
+
+                <input
+                    type="text"
+                    id="custom-page-title"
+                    placeholder="Default: Client name"
+                    autocomplete="off"
+                    maxlength="100"
+                >
+
+                <p class="settings-description">
+                    Leave empty to use the original client names.
+                    A custom title will override all page titles.
+                </p>
+            </div>
+
+            <div class="settings-footer">
+                <span>Changes are saved automatically</span>
+                <button id="settings-done">Done</button>
+            </div>
+
+        </div>
+    </div>
   
     <div class="container">
         <header>
@@ -492,6 +800,17 @@
     </div>
 
     <script>
+
+        const FAVICON_PRESETS = {
+            main: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/main.txt",
+
+            google: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/google.txt",
+
+            classroom: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/classroom.txt",
+
+            drive: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/drive.txt"
+        };
+
         const search = document.getElementById('search');
         const categories = document.querySelectorAll('.category');
         const items = document.querySelectorAll('.item');
@@ -537,75 +856,422 @@
 
         const baseUrl = atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29t');
 
+        const SETTINGS_KEY = 'eaglercraftLauncherSettings';
+
+        const settingsOverlay = document.getElementById('settings-overlay');
+        const settingsButton = document.getElementById('settings-button');
+        const settingsClose = document.getElementById('settings-close');
+        const settingsDone = document.getElementById('settings-done');
+
+        const customFaviconInput = document.getElementById('custom-favicon-url');
+        const customTitleInput = document.getElementById('custom-page-title');
+
+        const mainFavicon = document.getElementById('main-favicon');
+
+        const defaultSettings = {
+            favicon: 'main',
+            customFavicon: '',
+            customTitle: ''
+        };
+
+        let launcherSettings = { ...defaultSettings };
+
+        try {
+            const savedSettings = localStorage.getItem(SETTINGS_KEY);
+
+            if (savedSettings) {
+                launcherSettings = {
+                    ...defaultSettings,
+                    ...JSON.parse(savedSettings)
+                };
+
+                if (
+                    !['main', 'google', 'classroom', 'drive', 'custom']
+                        .includes(launcherSettings.favicon)
+                ) {
+                    launcherSettings.favicon = 'main';
+                }
+            }
+        } catch (error) {
+            console.error('Could not restore launcher settings:', error);
+        }
+
+        const openedClientTabs = new Map();
+
+        async function resolveFavicon(mode, customUrl = '') {
+            if (mode === 'custom') {
+                return customUrl.trim() ||
+                    await resolveFavicon('main');
+            }
+
+            const sourceUrl = FAVICON_PRESETS[mode];
+
+            if (!sourceUrl || sourceUrl.startsWith('PASTE_')) {
+                return '';
+            }
+
+            try {
+                const response = await fetch(sourceUrl);
+
+                if (!response.ok) {
+                    throw new Error('Favicon file could not be loaded');
+                }
+
+                return (await response.text()).trim();
+            } catch (error) {
+                console.error('Favicon loading error:', error);
+                return '';
+            }
+        }
+
+        function setFavicon(documentRef, faviconUrl) {
+            if (!documentRef || !faviconUrl) return;
+
+            let favicon = documentRef.querySelector(
+                'link[rel~="icon"]'
+            );
+
+            if (!favicon) {
+                favicon = documentRef.createElement('link');
+                favicon.rel = 'icon';
+                favicon.type = 'image/png';
+                documentRef.head.appendChild(favicon);
+            }
+
+            if (favicon.href !== faviconUrl) {
+                favicon.href = faviconUrl;
+            }
+        }
+
+        async function updateFaviconPreviews() {
+            for (const preset of Object.keys(FAVICON_PRESETS)) {
+                const preview = document.getElementById(
+                    'preview-' + preset
+                );
+
+                if (!preview) continue;
+
+                const url = await resolveFavicon(preset);
+
+                preview.src = url || '';
+            }
+
+            updateCustomPreview();
+        }
+
+        function updateCustomPreview() {
+            const preview = document.getElementById('preview-custom');
+
+            if (!preview) return;
+
+            const url = customFaviconInput.value.trim();
+
+            preview.src = url || '';
+        }
+
+        async function applyLauncherSettings() {
+            const faviconUrl = await resolveFavicon(
+                launcherSettings.favicon,
+                launcherSettings.customFavicon
+            );
+
+            if (faviconUrl) {
+                setFavicon(document, faviconUrl);
+            }
+
+            if (launcherSettings.customTitle.trim()) {
+                document.title = launcherSettings.customTitle.trim();
+            } else {
+                document.title = 'Eaglercraft Clients';
+            }
+
+            for (const [tab, clientName] of openedClientTabs) {
+                try {
+                    if (tab.closed) {
+                        openedClientTabs.delete(tab);
+                        continue;
+                    }
+
+                    applySettingsToClientTab(
+                        tab,
+                        clientName,
+                        faviconUrl
+                    );
+                } catch (error) {
+                    console.error('Could not update client tab:', error);
+                }
+            }
+        }
+
+        function applySettingsToClientTab(tab, clientName, faviconUrl) {
+            if (!tab || tab.closed) return;
+
+            try {
+                const doc = tab.document;
+
+                if (!doc || !doc.head) return;
+
+                const title = launcherSettings.customTitle.trim()
+                    || clientName;
+
+                if (doc.title !== title) {
+                    doc.title = title;
+                }
+
+                if (faviconUrl) {
+                    setFavicon(doc, faviconUrl);
+                }
+
+            } catch (error) {
+                console.error('Client tab settings error:', error);
+            }
+        }
+
+        function registerLauncherTab(tab, clientName) {
+            if (!tab || tab.closed) return;
+
+            openedClientTabs.set(tab, clientName);
+
+            applyLauncherSettings();
+
+            try {
+                const observer = new MutationObserver(() => {
+                    if (tab.closed) {
+                        observer.disconnect();
+                        openedClientTabs.delete(tab);
+                        return;
+                    }
+
+                    applySettingsToClientTab(
+                        tab,
+                        clientName,
+                        currentResolvedFavicon
+                    );
+                });
+
+                observer.observe(tab.document.documentElement, {
+                    subtree: true,
+                    childList: true,
+                    attributes: true,
+                    attributeFilter: ['href']
+                });
+
+                if (tab.document.head) {
+                    observer.observe(tab.document.head, {
+                        subtree: true,
+                        childList: true,
+                        characterData: true
+                    });
+                }
+
+                tab.__launcherSettingsObserver = observer;
+
+            } catch (error) {
+                console.error('Could not observe client tab:', error);
+            }
+        }
+
+        let currentResolvedFavicon = '';
+
+        const originalApplyLauncherSettings = applyLauncherSettings;
+
+        applyLauncherSettings = async function() {
+            currentResolvedFavicon = await resolveFavicon(
+                launcherSettings.favicon,
+                launcherSettings.customFavicon
+            );
+
+            await originalApplyLauncherSettings();
+        };
+
+        function openSettings() {
+
+            document.querySelectorAll('input[name="favicon"]').forEach(input => {
+                input.checked = input.value === launcherSettings.favicon;
+            });
+
+            customFaviconInput.value = launcherSettings.customFavicon;
+            customTitleInput.value = launcherSettings.customTitle;
+
+            updateCustomPreview();
+
+            settingsOverlay.classList.add('active');
+        }
+
+        function closeSettings() {
+
+            const selectedFavicon = document.querySelector(
+                'input[name="favicon"]:checked'
+            );
+
+            launcherSettings.favicon = selectedFavicon
+                ? selectedFavicon.value
+                : 'main';
+
+            launcherSettings.customFavicon =
+                customFaviconInput.value.trim();
+
+            launcherSettings.customTitle =
+                customTitleInput.value.trim();
+
+            try {
+                localStorage.setItem(
+                    SETTINGS_KEY,
+                    JSON.stringify(launcherSettings)
+                );
+            } catch (error) {
+                console.error('Could not save settings:', error);
+            }
+
+            settingsOverlay.classList.remove('active');
+
+            applyLauncherSettings();
+        }
+
+        settingsButton.addEventListener('click', openSettings);
+
+        settingsClose.addEventListener('click', closeSettings);
+        settingsDone.addEventListener('click', closeSettings);
+
+        settingsOverlay.addEventListener('click', event => {
+            if (event.target === settingsOverlay) {
+                closeSettings();
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (
+                event.key === 'Escape' &&
+                settingsOverlay.classList.contains('active')
+            ) {
+                closeSettings();
+            }
+        });
+
+        document.querySelectorAll('input[name="favicon"]').forEach(input => {
+            input.addEventListener('change', () => {
+                const selected = input.value;
+
+                launcherSettings.favicon = selected;
+                launcherSettings.customFavicon =
+                    customFaviconInput.value.trim();
+
+                applyLauncherSettings();
+            });
+        });
+
+        customFaviconInput.addEventListener('input', () => {
+            updateCustomPreview();
+
+            launcherSettings.customFavicon =
+                customFaviconInput.value.trim();
+
+            const customRadio = document.querySelector(
+                'input[name="favicon"][value="custom"]'
+            );
+
+            customRadio.checked = true;
+            launcherSettings.favicon = 'custom';
+
+            applyLauncherSettings();
+        });
+
+        customTitleInput.addEventListener('input', () => {
+            launcherSettings.customTitle =
+                customTitleInput.value.trim();
+
+            applyLauncherSettings();
+        });
+
+        updateFaviconPreviews();
+        applyLauncherSettings();
+
         document.querySelectorAll('.item a').forEach(link => {
             link.addEventListener('click', function(event) {
                 event.preventDefault();
 
                 const item = this.closest('.item');
-                const clientName = item.getAttribute('client-name') || this.textContent.trim();
-                const appendUrl = atob(item.getAttribute('append-url') || '');
+
+                const clientName =
+                    item.getAttribute('client-name') ||
+                    this.textContent.trim();
+
+                const appendUrl = atob(
+                    item.getAttribute('append-url') || ''
+                );
+
                 const safeClientName = JSON.stringify(clientName);
                 const safeFullUrl = JSON.stringify(baseUrl + appendUrl);
+
                 const newBlankTab = window.open('about:blank', '_blank');
 
                 if (!newBlankTab) {
-                    alert('Allow pop-ups at the right of the search bar. Then reload the page.');
+                    alert(
+                        'Allow pop-ups at the right of the search bar. Then reload the page.'
+                    );
                     return;
                 }
-
-                const faviconUrl = "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/main.txt";
 
                 const htmlContent = `
                 <!DOCTYPE html>
                 <html lang="en">
-                  <head>
+                <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>${clientName.replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]))}</title>
-                  </head>
-                  <body>
+                    <title>${clientName.replace(/[&<>"']/g, character => ({
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        '"': '&quot;',
+                        "'": '&#39;'
+                    }[character]))}</title>
+                </head>
+                <body>
                     <script>
-                      
-                      const clientName = ${safeClientName};
-                      const fullUrl = ${safeFullUrl};
-                      const faviconUrl = ${JSON.stringify(faviconUrl)};
 
-                      async function fetchAndRun() {
-                          try {
-                              const response = await fetch(fullUrl);
-                              if (!response.ok) {
-                                  alert('Failed to fetch URL. Check your internet connection.');
-                                  return;
-                              }
-                              const html = await response.text();
-                              document.open();
-                              document.write(html);
-                              document.close();
+                        const clientName = ${safeClientName};
+                        const fullUrl = ${safeFullUrl};
 
-                              document.title = clientName;
-                              
-                              let favicon = document.querySelector("link[rel~='icon']");
-                              if (!favicon) {
-                                  favicon = document.createElement('link');
-                                  favicon.rel = 'icon';
-                                  favicon.type = 'image/png';
-                                  document.head.appendChild(favicon);
-                              }
+                        async function fetchAndRun() {
+                            try {
+                                const response = await fetch(fullUrl);
 
-                              const faviconResponse = await fetch(faviconUrl);
-                              if (faviconResponse.ok) {
-                                  const faviconString = (await faviconResponse.text()).trim();
-                                  favicon.href = faviconString;
-                              }
+                                if (!response.ok) {
+                                    alert('Failed to fetch URL. Check your internet connection.');
+                                    return;
+                                }
 
-                          } catch (error) {
-                              console.error('Error fetching the code:', error);
-                              alert('Error fetching the code. Check your internet connection.');
-                          }
-                      }
-                      fetchAndRun();
-                    <` + `/script>
-                  </body>
+                                const html = await response.text();
+
+                                document.open();
+                                document.write(html);
+                                document.close();
+
+                                // Register this tab with the main launcher.
+                                // This applies the latest saved settings.
+                                if (
+                                    window.opener &&
+                                    !window.opener.closed &&
+                                    typeof window.opener.registerLauncherTab === 'function'
+                                ) {
+                                    window.opener.registerLauncherTab(
+                                        window,
+                                        clientName
+                                    );
+                                } else {
+                                    document.title = clientName;
+                                }
+
+                            } catch (error) {
+                                console.error('Error fetching the code:', error);
+                                alert('Error fetching the code. Check your internet connection.');
+                            }
+                        }
+
+                        fetchAndRun();
+
+                    <\/script>
+                </body>
                 </html>`;
 
                 newBlankTab.document.open();
