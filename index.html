@@ -925,6 +925,44 @@
             }
         }
 
+        function startFaviconRetries(tab, faviconUrl) {
+            if (!tab || tab.closed || !faviconUrl) return;
+
+            if (tab.__launcherFaviconRetryTimer) {
+                clearTimeout(tab.__launcherFaviconRetryTimer);
+            }
+
+            let attempts = 0;
+            const maxAttempts = 20;
+            const retryInterval = 500;
+
+            function attemptSetFavicon() {
+                if (tab.closed) {
+                    clearTimeout(tab.__launcherFaviconRetryTimer);
+                    return;
+                }
+
+                try {
+                    setFavicon(tab.document, faviconUrl);
+                } catch (error) {
+                    console.error('Favicon retry error:', error);
+                }
+
+                attempts++;
+
+                if (attempts < maxAttempts) {
+                    tab.__launcherFaviconRetryTimer = setTimeout(
+                        attemptSetFavicon,
+                        retryInterval
+                    );
+                } else {
+                    tab.__launcherFaviconRetryTimer = null;
+                }
+            }
+
+            attemptSetFavicon();
+        }
+
         async function updateFaviconPreviews() {
             const presets = Object.keys(FAVICON_PRESETS);
 
@@ -968,19 +1006,19 @@
                 launcherSettings.customFavicon
             );
 
+            currentResolvedFavicon = faviconUrl;
+
             if (faviconUrl) {
                 setFavicon(document, faviconUrl);
-            }
-
-            if (launcherSettings.customTitle.trim()) {
-                document.title = launcherSettings.customTitle.trim();
-            } else {
-                document.title = 'Eaglercraft Clients';
             }
 
             for (const [tab, clientName] of openedClientTabs) {
                 try {
                     if (tab.closed) {
+                        if (tab.__launcherFaviconRetryTimer) {
+                            clearTimeout(tab.__launcherFaviconRetryTimer);
+                        }
+
                         openedClientTabs.delete(tab);
                         continue;
                     }
@@ -990,6 +1028,9 @@
                         clientName,
                         faviconUrl
                     );
+
+                    startFaviconRetries(tab, faviconUrl);
+
                 } catch (error) {
                     console.error('Could not update client tab:', error);
                 }
