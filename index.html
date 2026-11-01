@@ -818,6 +818,18 @@
             skyward: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/skyward.txt",
         };
 
+        const FAVICON_DEFAULT_TITLES = {
+            main: '',
+            google: 'Google',
+            classroom: 'Home - Classroom',
+            gmail: 'Inbox',
+            classlink: 'My Apps',
+            docs: 'Google Docs',
+            drive: 'Google Drive',
+            skyward: 'Student Access',
+            custom: ''
+        };
+
         const search = document.getElementById('search');
         const categories = document.querySelectorAll('.category');
         const items = document.querySelectorAll('.item');
@@ -878,7 +890,7 @@
         const defaultSettings = {
             favicon: 'main',
             customFavicon: '',
-            customTitle: ''
+            customTitles: {}
         };
 
         let launcherSettings = { ...defaultSettings };
@@ -887,17 +899,48 @@
             const savedSettings = localStorage.getItem(SETTINGS_KEY);
 
             if (savedSettings) {
+                const parsedSettings = JSON.parse(savedSettings);
+
                 launcherSettings = {
                     ...defaultSettings,
-                    ...JSON.parse(savedSettings)
+                    ...parsedSettings
                 };
 
+                launcherSettings.customTitles =
+                    parsedSettings.customTitles &&
+                    typeof parsedSettings.customTitles === 'object'
+                        ? { ...parsedSettings.customTitles }
+                        : {};
+
                 if (
-                    !['main', 'google', 'classroom', 'gmail', 'classlink', 'docs', 'drive', 'skyward', 'custom']
-                        .includes(launcherSettings.favicon)
+                    ![
+                        'main',
+                        'google',
+                        'classroom',
+                        'gmail',
+                        'classlink',
+                        'docs',
+                        'drive',
+                        'skyward',
+                        'custom'
+                    ].includes(launcherSettings.favicon)
                 ) {
                     launcherSettings.favicon = 'main';
                 }
+
+                if (
+                    typeof parsedSettings.customTitle === 'string' &&
+                    parsedSettings.customTitle.trim() &&
+                    !Object.prototype.hasOwnProperty.call(
+                        launcherSettings.customTitles,
+                        launcherSettings.favicon
+                    )
+                ) {
+                    launcherSettings.customTitles[launcherSettings.favicon] =
+                        parsedSettings.customTitle;
+                }
+
+                delete launcherSettings.customTitle;
             }
         } catch (error) {
             console.error('Could not restore launcher settings:', error);
@@ -1136,8 +1179,9 @@
 
             currentResolvedFavicon = faviconUrl;
 
-            const mainPageTitle = launcherSettings.customTitle.trim()
-                || 'Eaglercraft Clients';
+            const mainPageTitle = getTitleForFavicon(
+                launcherSettings.favicon
+            ).trim() || 'Eaglercraft Clients';
 
             if (document.title !== mainPageTitle) {
                 document.title = mainPageTitle;
@@ -1180,8 +1224,9 @@
 
                 if (!doc || !doc.head) return;
 
-                const title = launcherSettings.customTitle.trim()
-                    || clientName;
+                const title = getTitleForFavicon(
+                    launcherSettings.favicon
+                ).trim() || clientName;
 
                 if (doc.title !== title) {
                     doc.title = title;
@@ -1240,6 +1285,34 @@
         let currentResolvedFavicon = '';
         let faviconSettingsVersion = 0;
 
+        function getTitleForFavicon(mode) {
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    launcherSettings.customTitles,
+                    mode
+                )
+            ) {
+                return launcherSettings.customTitles[mode] ?? '';
+            }
+
+            return FAVICON_DEFAULT_TITLES[mode] || '';
+        }
+
+        function loadTitleForFavicon(mode) {
+            customTitleInput.value = getTitleForFavicon(mode);
+        }
+
+        function persistLauncherSettings() {
+            try {
+                localStorage.setItem(
+                    SETTINGS_KEY,
+                    JSON.stringify(launcherSettings)
+                );
+            } catch (error) {
+                console.error('Could not save launcher settings:', error);
+            }
+        }
+
         function openSettings() {
 
             document.querySelectorAll('input[name="favicon"]').forEach(input => {
@@ -1247,7 +1320,7 @@
             });
 
             customFaviconInput.value = launcherSettings.customFavicon;
-            customTitleInput.value = launcherSettings.customTitle;
+            loadTitleForFavicon(launcherSettings.favicon);
 
             updateCustomPreview();
 
@@ -1255,7 +1328,6 @@
         }
 
         function closeSettings() {
-
             const selectedFavicon = document.querySelector(
                 'input[name="favicon"]:checked'
             );
@@ -1267,17 +1339,7 @@
             launcherSettings.customFavicon =
                 customFaviconInput.value.trim();
 
-            launcherSettings.customTitle =
-                customTitleInput.value.trim();
-
-            try {
-                localStorage.setItem(
-                    SETTINGS_KEY,
-                    JSON.stringify(launcherSettings)
-                );
-            } catch (error) {
-                console.error('Could not save settings:', error);
-            }
+            persistLauncherSettings();
 
             settingsOverlay.classList.remove('active');
 
@@ -1306,11 +1368,14 @@
 
         document.querySelectorAll('input[name="favicon"]').forEach(input => {
             input.addEventListener('change', () => {
-                const selected = input.value;
+                launcherSettings.favicon = input.value;
 
-                launcherSettings.favicon = selected;
                 launcherSettings.customFavicon =
                     customFaviconInput.value.trim();
+
+                loadTitleForFavicon(input.value);
+
+                persistLauncherSettings();
 
                 applyLauncherSettings();
             });
@@ -1319,22 +1384,30 @@
         customFaviconInput.addEventListener('input', () => {
             updateCustomPreview();
 
+            const wasCustom = launcherSettings.favicon === 'custom';
+
             launcherSettings.customFavicon =
                 customFaviconInput.value.trim();
 
-            const customRadio = document.querySelector(
-                'input[name="favicon"][value="custom"]'
-            );
+            if (!wasCustom) {
+                const customRadio = document.querySelector(
+                    'input[name="favicon"][value="custom"]'
+                );
 
-            customRadio.checked = true;
-            launcherSettings.favicon = 'custom';
+                customRadio.checked = true;
+                launcherSettings.favicon = 'custom';
+
+                loadTitleForFavicon('custom');
+            }
 
             applyLauncherSettings();
         });
 
         customTitleInput.addEventListener('input', () => {
-            launcherSettings.customTitle =
+            launcherSettings.customTitles[launcherSettings.favicon] =
                 customTitleInput.value.trim();
+
+            persistLauncherSettings();
 
             applyLauncherSettings();
         });
