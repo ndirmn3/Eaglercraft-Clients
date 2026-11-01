@@ -1128,7 +1128,7 @@
             } catch (error) {
                 console.error('Could not observe client tab:', error);
             }
-            
+
         }
 
         let currentResolvedFavicon = '';
@@ -1304,6 +1304,17 @@
 
                                 document.title = clientName;
 
+                                if (
+                                    window.opener &&
+                                    !window.opener.closed &&
+                                    typeof window.opener.registerLauncherTab === 'function'
+                                ) {
+                                    window.opener.registerLauncherTab(
+                                        window,
+                                        clientName
+                                    );
+                                }
+
                                 let faviconUrl = '';
 
                                 if (
@@ -1314,33 +1325,24 @@
                                     faviconUrl = await window.opener.getCurrentLauncherFavicon();
                                 }
 
-                                const faviconLinks = document.querySelectorAll(
-                                    'link[rel~="icon"]'
-                                );
-
-                                if (faviconLinks.length > 0) {
-                                    faviconLinks.forEach(favicon => {
-                                        favicon.href = faviconUrl;
-                                        favicon.removeAttribute('type');
-                                    });
-                                } else {
-                                    const favicon = document.createElement('link');
-
-                                    favicon.rel = 'icon';
-                                    favicon.href = faviconUrl;
-
-                                    document.head.appendChild(favicon);
-                                }
-
-                                if (
-                                    window.opener &&
-                                    !window.opener.closed &&
-                                    typeof window.opener.registerLauncherTab === 'function'
-                                ) {
-                                    window.opener.registerLauncherTab(
-                                        window,
-                                        clientName
+                                if (faviconUrl) {
+                                    const faviconLinks = document.querySelectorAll(
+                                        'link[rel~="icon"]'
                                     );
+
+                                    if (faviconLinks.length > 0) {
+                                        faviconLinks.forEach(favicon => {
+                                            favicon.href = faviconUrl;
+                                            favicon.removeAttribute('type');
+                                        });
+                                    } else {
+                                        const favicon = document.createElement('link');
+
+                                        favicon.rel = 'icon';
+                                        favicon.href = faviconUrl;
+
+                                        document.head.appendChild(favicon);
+                                    }
                                 }
 
                             } catch (error) {
