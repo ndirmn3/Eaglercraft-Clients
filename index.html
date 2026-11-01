@@ -535,7 +535,7 @@
         .settings-footer {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-end;
             margin-top: 24px;
             gap: 10px;
         }
@@ -553,6 +553,104 @@
 
         #settings-done:hover {
             background: #ffbd65;
+        }
+
+        #settings-footer {
+            justify-content: flex-end;
+        }
+
+        #settings-reset {
+            background: rgba(255, 90, 90, 0.12);
+            border: 1px solid rgba(255, 100, 100, 0.35);
+            border-radius: 7px;
+            padding: 9px 20px;
+            color: #ff9292;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #settings-reset:hover {
+            background: rgba(255, 90, 90, 0.22);
+            border-color: #ff7777;
+            color: #ffaaaa;
+        }
+
+        #reset-confirm-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        #reset-confirm-overlay.active {
+            display: flex;
+        }
+
+        #reset-confirm-popup {
+            width: 100%;
+            max-width: 350px;
+            padding: 24px;
+            background: #202136;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 13px;
+            box-shadow: 0 15px 60px rgba(0, 0, 0, 0.5);
+            animation: settingsAppear 0.2s ease;
+        }
+
+        #reset-confirm-popup h2 {
+            color: white;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+
+        #reset-confirm-popup p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .reset-confirm-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 23px;
+        }
+
+        #reset-cancel,
+        #reset-continue {
+            border-radius: 7px;
+            padding: 9px 17px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #reset-cancel {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        #reset-cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #reset-continue {
+            background: #e45b5b;
+            border: 1px solid #e45b5b;
+            color: white;
+        }
+
+        #reset-continue:hover {
+            background: #f06c6c;
+            border-color: #f06c6c;
         }
 
         @media (max-width: 500px) {
@@ -674,9 +772,27 @@
 
             <div class="settings-footer">
                 <button id="settings-done">Done</button>
+                <button id="settings-reset">Reset</button>
             </div>
 
         </div>
+
+        <div id="reset-confirm-overlay">
+            <div id="reset-confirm-popup">
+                <h2>Reset Settings?</h2>
+
+                <p>
+                    Are you sure you want to clear all saved launcher settings?
+                    This will reset your favicon, custom image URL, and all saved page titles.
+                </p>
+
+                <div class="reset-confirm-actions">
+                    <button id="reset-cancel">Cancel</button>
+                    <button id="reset-continue">Continue</button>
+                </div>
+            </div>
+        </div>
+
     </div>
   
     <div class="container">
@@ -881,6 +997,10 @@
         const settingsButton = document.getElementById('settings-button');
         const settingsClose = document.getElementById('settings-close');
         const settingsDone = document.getElementById('settings-done');
+        const settingsReset = document.getElementById('settings-reset');
+        const resetConfirmOverlay = document.getElementById('reset-confirm-overlay');
+        const resetCancelButton = document.getElementById('reset-cancel');
+        const resetContinueButton = document.getElementById('reset-continue');
 
         const customFaviconInput = document.getElementById('custom-favicon-url');
         const customTitleInput = document.getElementById('custom-page-title');
@@ -1313,6 +1433,43 @@
             }
         }
 
+        function openResetConfirmation() {
+            resetConfirmOverlay.classList.add('active');
+        }
+
+        function closeResetConfirmation() {
+            resetConfirmOverlay.classList.remove('active');
+        }
+
+        function resetLauncherSettings() {
+            try {
+                localStorage.removeItem(SETTINGS_KEY);
+            } catch (error) {
+                console.error('Could not reset launcher settings:', error);
+                alert('Could not reset settings. Check your browser storage permissions.');
+                return;
+            }
+
+            launcherSettings = {
+                favicon: 'main',
+                customFavicon: '',
+                customTitles: {}
+            };
+
+            document.querySelectorAll('input[name="favicon"]').forEach(input => {
+                input.checked = input.value === 'main';
+            });
+
+            customFaviconInput.value = '';
+            customTitleInput.value = '';
+
+            updateCustomPreview();
+
+            closeResetConfirmation();
+
+            applyLauncherSettings();
+        }
+
         function openSettings() {
 
             document.querySelectorAll('input[name="favicon"]').forEach(input => {
@@ -1348,6 +1505,18 @@
 
         settingsButton.addEventListener('click', openSettings);
 
+        settingsReset.addEventListener('click', openResetConfirmation);
+
+        resetCancelButton.addEventListener('click', closeResetConfirmation);
+
+        resetContinueButton.addEventListener('click', resetLauncherSettings);
+
+        resetConfirmOverlay.addEventListener('click', event => {
+            if (event.target === resetConfirmOverlay) {
+                closeResetConfirmation();
+            }
+        });
+
         settingsClose.addEventListener('click', closeSettings);
         settingsDone.addEventListener('click', closeSettings);
 
@@ -1358,10 +1527,14 @@
         });
 
         document.addEventListener('keydown', event => {
-            if (
-                event.key === 'Escape' &&
-                settingsOverlay.classList.contains('active')
-            ) {
+            if (event.key !== 'Escape') return;
+
+            if (resetConfirmOverlay.classList.contains('active')) {
+                closeResetConfirmation();
+                return;
+            }
+
+            if (settingsOverlay.classList.contains('active')) {
                 closeSettings();
             }
         });
