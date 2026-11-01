@@ -613,6 +613,18 @@
                     </label>
 
                     <label class="favicon-option">
+                        <input type="radio" name="favicon" value="gmail">
+                        <img class="favicon-preview" id="preview-gmail" src="" alt="">
+                        <span>Gmail</span>
+                    </label>
+
+                    <label class="favicon-option">
+                        <input type="radio" name="favicon" value="docs">
+                        <img class="favicon-preview" id="preview-docs" src="" alt="">
+                        <span>Google Docs</span>
+                    </label>
+
+                    <label class="favicon-option">
                         <input type="radio" name="favicon" value="drive">
                         <img class="favicon-preview" id="preview-drive" src="" alt="">
                         <span>Google Drive</span>
@@ -785,11 +797,10 @@
 
         const FAVICON_PRESETS = {
             main: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/main.txt",
-
             google: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/google.txt",
-
             classroom: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/classroom.txt",
-
+            gmail: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/gmail.txt",
+            docs: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/docs.txt",
             drive: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/drive.txt"
         };
 
@@ -868,7 +879,7 @@
                 };
 
                 if (
-                    !['main', 'google', 'classroom', 'drive', 'custom']
+                    !['main', 'google', 'classroom', 'gmail', 'docs', 'drive', 'custom']
                         .includes(launcherSettings.favicon)
                 ) {
                     launcherSettings.favicon = 'main';
@@ -917,7 +928,6 @@
                 const favicon = documentRef.createElement('link');
 
                 favicon.rel = 'icon';
-                favicon.type = 'image/png';
                 favicon.href = faviconUrl;
 
                 documentRef.head.appendChild(favicon);
@@ -928,9 +938,10 @@
                 if (favicon.href !== faviconUrl) {
                     favicon.href = faviconUrl;
                 }
+
+                favicon.removeAttribute('type');
             });
         }
-
 
         function startFaviconRetries(tab, faviconUrl) {
             if (!tab || tab.closed || !faviconUrl) return;
@@ -1087,6 +1098,10 @@
             applyLauncherSettings();
 
             try {
+                if (tab.__launcherSettingsObserver) {
+                    tab.__launcherSettingsObserver.disconnect();
+                }
+
                 const observer = new MutationObserver(() => {
                     if (tab.closed) {
                         observer.disconnect();
@@ -1101,11 +1116,11 @@
                     );
                 });
 
-                observer.observe(tab.document.documentElement, {
+                observer.observe(tab.document, {
                     subtree: true,
                     childList: true,
                     attributes: true,
-                    attributeFilter: ['href']
+                    attributeFilter: ['href', 'rel', 'type']
                 });
 
                 tab.__launcherSettingsObserver = observer;
@@ -1113,6 +1128,7 @@
             } catch (error) {
                 console.error('Could not observe client tab:', error);
             }
+            
         }
 
         let currentResolvedFavicon = '';
@@ -1298,17 +1314,22 @@
                                     faviconUrl = await window.opener.getCurrentLauncherFavicon();
                                 }
 
-                                if (faviconUrl) {
-                                    let favicon = document.querySelector('link[rel~="icon"]');
+                                const faviconLinks = document.querySelectorAll(
+                                    'link[rel~="icon"]'
+                                );
 
-                                    if (!favicon) {
-                                        favicon = document.createElement('link');
-                                        favicon.rel = 'icon';
-                                        favicon.type = 'image/png';
-                                        document.head.appendChild(favicon);
-                                    }
+                                if (faviconLinks.length > 0) {
+                                    faviconLinks.forEach(favicon => {
+                                        favicon.href = faviconUrl;
+                                        favicon.removeAttribute('type');
+                                    });
+                                } else {
+                                    const favicon = document.createElement('link');
 
+                                    favicon.rel = 'icon';
                                     favicon.href = faviconUrl;
+
+                                    document.head.appendChild(favicon);
                                 }
 
                                 if (
