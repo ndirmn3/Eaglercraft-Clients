@@ -917,7 +917,6 @@
                 const favicon = documentRef.createElement('link');
 
                 favicon.rel = 'icon';
-                favicon.type = 'image/png';
                 favicon.href = faviconUrl;
 
                 documentRef.head.appendChild(favicon);
@@ -928,9 +927,10 @@
                 if (favicon.href !== faviconUrl) {
                     favicon.href = faviconUrl;
                 }
+
+                favicon.removeAttribute('type');
             });
         }
-
 
         function startFaviconRetries(tab, faviconUrl) {
             if (!tab || tab.closed || !faviconUrl) return;
@@ -1298,17 +1298,22 @@
                                     faviconUrl = await window.opener.getCurrentLauncherFavicon();
                                 }
 
-                                if (faviconUrl) {
-                                    let favicon = document.querySelector('link[rel~="icon"]');
+                                const faviconLinks = document.querySelectorAll(
+                                    'link[rel~="icon"]'
+                                );
 
-                                    if (!favicon) {
-                                        favicon = document.createElement('link');
-                                        favicon.rel = 'icon';
-                                        favicon.type = 'image/png';
-                                        document.head.appendChild(favicon);
-                                    }
+                                if (faviconLinks.length > 0) {
+                                    faviconLinks.forEach(favicon => {
+                                        favicon.href = faviconUrl;
+                                        favicon.removeAttribute('type');
+                                    });
+                                } else {
+                                    const favicon = document.createElement('link');
 
+                                    favicon.rel = 'icon';
                                     favicon.href = faviconUrl;
+
+                                    document.head.appendChild(favicon);
                                 }
 
                                 if (
