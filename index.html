@@ -917,6 +917,76 @@
             }
         }
 
+        const squareFaviconCache = new Map();
+
+        async function makeSquareFavicon(faviconUrl) {
+            if (!faviconUrl) return '';
+
+            if (squareFaviconCache.has(faviconUrl)) {
+                return squareFaviconCache.get(faviconUrl);
+            }
+
+            const conversion = new Promise(resolve => {
+                const image = new Image();
+
+                image.crossOrigin = 'anonymous';
+
+                image.onload = () => {
+                    try {
+                        const size = 128;
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = size;
+                        canvas.height = size;
+
+                        const context = canvas.getContext('2d');
+
+                        if (
+                            !context ||
+                            !image.naturalWidth ||
+                            !image.naturalHeight
+                        ) {
+                            resolve(faviconUrl);
+                            return;
+                        }
+
+                        const scale = Math.min(
+                            size / image.naturalWidth,
+                            size / image.naturalHeight
+                        );
+
+                        const width = image.naturalWidth * scale;
+                        const height = image.naturalHeight * scale;
+
+                        const x = (size - width) / 2;
+                        const y = (size - height) / 2;
+
+                        context.drawImage(
+                            image,
+                            x,
+                            y,
+                            width,
+                            height
+                        );
+
+                        resolve(canvas.toDataURL('image/png'));
+
+                    } catch (error) {
+                        console.warn('Could not convert favicon:', error);
+                        resolve(faviconUrl);
+                    }
+                };
+
+                image.onerror = () => resolve(faviconUrl);
+
+                image.src = faviconUrl;
+            });
+
+            squareFaviconCache.set(faviconUrl, conversion);
+
+            return await conversion;
+        }
+
         function setFavicon(documentRef, faviconUrl) {
             if (!documentRef || !documentRef.head || !faviconUrl) return;
 
@@ -990,7 +1060,8 @@
 
             const previewResults = await Promise.all(
                 presets.map(async preset => {
-                    const url = await resolveFavicon(preset);
+                    const resolvedUrl = await resolveFavicon(preset);
+                    const url = await makeSquareFavicon(resolvedUrl);
 
                     return {
                         preset: preset,
@@ -1012,14 +1083,26 @@
             updateCustomPreview();
         }
 
-        function updateCustomPreview() {
+        let customPreviewRequest = 0;
+
+        async function updateCustomPreview() {
             const preview = document.getElementById('preview-custom');
 
             if (!preview) return;
 
             const url = customFaviconInput.value.trim();
+            const requestVersion = ++customPreviewRequest;
 
-            preview.src = url || '';
+            if (!url) {
+                preview.removeAttribute('src');
+                return;
+            }
+
+            const squareUrl = await makeSquareFavicon(url);
+
+            if (requestVersion === customPreviewRequest) {
+                preview.src = squareUrl || '';
+            }
         }
 
         async function applyLauncherSettings() {
@@ -1028,10 +1111,12 @@
             const selectedFavicon = launcherSettings.favicon;
             const selectedCustomFavicon = launcherSettings.customFavicon;
 
-            const faviconUrl = await resolveFavicon(
+            const resolvedUrl = await resolveFavicon(
                 selectedFavicon,
                 selectedCustomFavicon
             );
+
+            const faviconUrl = await makeSquareFavicon(resolvedUrl);
 
             if (requestVersion !== faviconSettingsVersion) return;
 
@@ -1244,10 +1329,12 @@
         applyLauncherSettings();
 
         window.getCurrentLauncherFavicon = async function() {
-            return await resolveFavicon(
+            const resolvedUrl = await resolveFavicon(
                 launcherSettings.favicon,
                 launcherSettings.customFavicon
             );
+
+            return await makeSquareFavicon(resolvedUrl);
         };
 
         document.querySelectorAll('.item a').forEach(link => {
