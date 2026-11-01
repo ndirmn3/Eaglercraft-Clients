@@ -1023,10 +1023,17 @@
         }
 
         async function applyLauncherSettings() {
+            const requestVersion = ++faviconSettingsVersion;
+
+            const selectedFavicon = launcherSettings.favicon;
+            const selectedCustomFavicon = launcherSettings.customFavicon;
+
             const faviconUrl = await resolveFavicon(
-                launcherSettings.favicon,
-                launcherSettings.customFavicon
+                selectedFavicon,
+                selectedCustomFavicon
             );
+
+            if (requestVersion !== faviconSettingsVersion) return;
 
             currentResolvedFavicon = faviconUrl;
 
@@ -1132,6 +1139,7 @@
         }
 
         let currentResolvedFavicon = '';
+        let faviconSettingsVersion = 0;
 
         function openSettings() {
 
@@ -1268,6 +1276,8 @@
                     return;
                 }
 
+                registerLauncherTab(newBlankTab, clientName);
+
                 const htmlContent = `
                 <!DOCTYPE html>
                 <html lang="en">
@@ -1304,31 +1314,7 @@
 
                                 document.title = clientName;
 
-                                if (
-                                    window.opener &&
-                                    !window.opener.closed &&
-                                    typeof window.opener.registerLauncherTab === 'function'
-                                ) {
-                                    window.opener.registerLauncherTab(
-                                        window,
-                                        clientName
-                                    );
-                                }
-
-                                let faviconUrl = '';
-
-                                if (
-                                    window.opener &&
-                                    !window.opener.closed &&
-                                    typeof window.opener.getCurrentLauncherFavicon === 'function'
-                                ) {
-                                    faviconUrl = await window.opener.getCurrentLauncherFavicon();
-                                }
-
                                 if (faviconUrl) {
-                                    const faviconLinks = document.querySelectorAll(
-                                        'link[rel~="icon"]'
-                                    );
 
                                     if (faviconLinks.length > 0) {
                                         faviconLinks.forEach(favicon => {
