@@ -619,6 +619,12 @@
                     </label>
 
                     <label class="favicon-option">
+                        <input type="radio" name="favicon" value="classlink">
+                        <img class="favicon-preview" id="preview-classlink" src="" alt="">
+                        <span>ClassLink</span>
+                    </label>
+
+                    <label class="favicon-option">
                         <input type="radio" name="favicon" value="docs">
                         <img class="favicon-preview" id="preview-docs" src="" alt="">
                         <span>Google Docs</span>
@@ -628,6 +634,12 @@
                         <input type="radio" name="favicon" value="drive">
                         <img class="favicon-preview" id="preview-drive" src="" alt="">
                         <span>Google Drive</span>
+                    </label>
+
+                    <label class="favicon-option">
+                        <input type="radio" name="favicon" value="skyward">
+                        <img class="favicon-preview" id="preview-skyward" src="" alt="">
+                        <span>Skyward</span>
                     </label>
 
                     <label class="favicon-option">
@@ -800,8 +812,10 @@
             google: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/google.txt",
             classroom: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/classroom.txt",
             gmail: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/gmail.txt",
+            classlink: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/classlink.txt",
             docs: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/docs.txt",
-            drive: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/drive.txt"
+            drive: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/drive.txt",
+            skyward: "https://raw.githubusercontent.com/ndirmn3/Standalone-Eaglercraft-Files/refs/heads/main/favicons/skyward.txt",
         };
 
         const search = document.getElementById('search');
@@ -879,7 +893,7 @@
                 };
 
                 if (
-                    !['main', 'google', 'classroom', 'gmail', 'docs', 'drive', 'custom']
+                    !['main', 'google', 'classroom', 'gmail', 'classlink', 'docs', 'drive', 'skyward', 'custom']
                         .includes(launcherSettings.favicon)
                 ) {
                     launcherSettings.favicon = 'main';
